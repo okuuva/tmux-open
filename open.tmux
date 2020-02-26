@@ -73,6 +73,13 @@ generate_open_search_command() {
 	fi
 }
 
+generate_custom_open_command() {
+	local command="$1"
+	# No point checking environment nor the command,
+	# trust that users know what they are doing
+	echo "$(command_generator "$command")"
+}
+
 # 1. write a command to the terminal, example: 'vim -- some_file.txt'
 # 2. invoke the command by pressing enter/C-m
 generate_editor_command() {
@@ -128,6 +135,26 @@ set_copy_mode_open_search_bindings() {
 		else
 			tmux bind-key -t vi-copy    "$engine_var" copy-pipe "$(generate_open_search_command "$engine")"
 			tmux bind-key -t emacs-copy "$engine_var" copy-pipe "$(generate_open_search_command "$engine")"
+		fi
+
+	done
+}
+
+set_copy_mode_open_custom_bindings() {
+	local stored_custom_command_vars="$(stored_custom_command_vars)"
+	local custom_open_var
+	local command
+	local key
+
+	for custom_open_var in $stored_custom_command_vars; do
+		command="$(get_custom_command "$custom_open_var")"
+
+		if tmux-is-at-least 2.4; then
+			tmux bind-key -T copy-mode-vi "$custom_open_var" send-keys -X copy-pipe-and-cancel "$(generate_open_search_command "$command")"
+			tmux bind-key -T copy-mode    "$custom_open_var" send-keys -X copy-pipe-and-cancel "$(generate_open_search_command "$command")"
+		else
+			tmux bind-key -t vi-copy    "$custom_open_var" copy-pipe "$(generate_open_search_command "$command")"
+			tmux bind-key -t emacs-copy "$custom_open_var" copy-pipe "$(generate_open_search_command "$command")"
 		fi
 
 	done

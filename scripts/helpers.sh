@@ -43,6 +43,16 @@ get_engine() {
 	tmux show-options -g | grep -i "^@open-search-$engine_var" | cut -d ' ' -f2 | xargs
 }
 
+stored_custom_command_vars() {
+	tmux show-options -g | grep -i "^@open-with" | cut -d '-' -f3 | cut -d ' ' -f1 | xargs
+}
+
+get_custom_command() {
+	local custom_open_var="$1"
+	# cut -f2- since custom commands most likely contain whitespaces and we want to capture them whole
+	tmux show-options -g | grep -i "^@open-with-$custom_open_var" | cut -d ' ' -f2- | xargs
+}
+
 tmux_version="$(tmux -V | cut -d ' ' -f 2)"
 tmux-is-at-least() {
 	if [[ $tmux_version == $1 ]]
