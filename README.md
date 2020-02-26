@@ -81,6 +81,15 @@ set -g @open-search-S 'https://www.google.com/search?q='
 
 in `tmux.conf`
 
+> Can I open the selection in something other than "open", $EDITOR or search engine?
+
+Yes you can! Put e.g.:
+
+```
+set -g @open-with-x 'xterm -e echo '
+```
+in `tmux.conf` in order to pass the selection to `echo` in a new xterm window
+
 ### Other goodies
 
 `tmux-open` works great with:
