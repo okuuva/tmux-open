@@ -35,12 +35,12 @@ display_message() {
 }
 
 stored_engine_vars() {
-	tmux show-options -g | grep -i "^@open" | cut -d '-' -f2 | cut -d ' ' -f1 | xargs
+	tmux show-options -g | grep -i "^@open-search" | cut -d '-' -f3 | cut -d ' ' -f1 | xargs
 }
 
 get_engine() {
 	local engine_var="$1"
-	tmux show-options -g | grep -i "^@open-$engine_var" | cut -d ' ' -f2 | xargs
+	tmux show-options -g | grep -i "^@open-search-$engine_var" | cut -d ' ' -f2 | xargs
 }
 
 tmux_version="$(tmux -V | cut -d ' ' -f 2)"
